@@ -1,0 +1,22 @@
+ProcessPoolExecutor vs ThreadPoolExecutor 
+
+Son dos clases del módulo concurrent.futures de Python que permiten ejecutar tareas en paralelo, pero utilizan mecanismos 
+diferentes:
+
+ThreadPoolExecutor:
+- Utiliza hilos (threads) para ejecutar tareas concurrentemente dentro de un mismo proceso.
+- Es útil para tareas de I/O (entrada/salida), como leer archivos, hacer peticiones de red, etc.
+- En tareas de CPU (como cálculos matemáticos intensivos), no logra paralelismo real debido al Global Interpreter Lock (GIL)
+  de Python. Los hilos se alternan, pero no se ejecutan realmente al mismo tiempo en varios núcleos.
+- Es más ligero y rápido de crear que los procesos.
+
+ProcessPoolExecutor:
+- Utiliza procesos independientes para ejecutar tareas en paralelo.
+- Cada proceso tiene su propio intérprete de Python y memoria, por lo que sí logra paralelismo real en tareas de CPU, 
+  aprovechando varios núcleos del procesador.
+- Es ideal para cálculos intensivos o tareas que requieren mucho procesamiento.
+- Crear procesos es más costoso en recursos que crear hilos, pero permite superar la limitación del GIL.
+
+Resumen:
+- Usa ThreadPoolExecutor para tareas de I/O o cuando el GIL no es un problema.
+- Usa ProcessPoolExecutor para tareas de CPU intensivas y cuando necesitas paralelismo real.

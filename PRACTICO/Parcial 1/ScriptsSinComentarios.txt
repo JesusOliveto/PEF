@@ -1,0 +1,35 @@
+import concurrent.futures
+import math
+import time
+
+def factorial(n):
+    return math.factorial(n)
+
+if __name__ == "__main__":
+    numbers = list(range(1, 101))
+    start = time.time()
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results = list(executor.map(factorial, numbers))
+    end = time.time()
+    for n, f in zip(numbers, results):
+        print(f"{n}! = {f}")
+    print(f"Tiempo total usando ThreadPoolExecutor: {end - start:.4f} segundos")
+
+---
+
+import concurrent.futures
+import math
+import time
+
+def factorial(n):
+    return math.factorial(n)
+
+if __name__ == "__main__":
+    numbers = list(range(1, 101))
+    start = time.time()
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        results = list(executor.map(factorial, numbers))
+    end = time.time()
+    for n, f in zip(numbers, results):
+        print(f"{n}! = {f}")
+    print(f"Tiempo total usando ProcessPoolExecutor: {end - start:.4f} segundos")
