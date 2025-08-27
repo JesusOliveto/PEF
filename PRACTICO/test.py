@@ -1,48 +1,54 @@
-#mide el tiempo de ejecucion de un algoritmo de fibonacci
+
 import random
+import array
+import sys
+import time
+import math
+from multiprocessing import Pool
+import threading
+#from memory_profiler import profile
 
 
-
-def measure_time(sort_function, arr):
-    import time
-    start_time = time.time()
-    sort_function(arr)
-    end_time = time.time()
-    return end_time - start_time
-
-
-def fibonacci(n):
+#@profile
+def esPrimo(n):
     if n <= 1:
-        return n
-    else:
-        return fibonacci(n-1) + fibonacci(n-2)
-    
-def fibonacci_memoized(n, memo={}):
-    if n in memo:
-        return memo[n]
-    if n <= 1:
-        return n
-    memo[n] = fibonacci_memoized(n-1, memo) + fibonacci_memoized(n-2, memo)
-    return memo[n]
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
 
-def fibonacci_iterative(n):
-    if n <= 1:
-        return n
-    a, b = 0, 1
-    for _ in range(2, n + 1):
-        a, b = b, a + b
-    return b
+numeros= [11227253509523, 11227253509529, 11227253509531, 11227253509533, 11227253509537, 11227253509539, 11227253509543]
+#numeros=[11227253509523]
+
 
 def main():
-    n = 37  # Cambiar este valor para probar con diferentes entradas
+    inicio = time.time()
+    resultados= list(map(esPrimo, numeros))
+    fin = time.time()
+    print(f"Tiempo de ejecucion:                    {fin - inicio} segundos")
+    print(f"Resultados: {resultados}")
 
-    print(f"Tiempo de ejecución: {measure_time(fibonacci, n)} segundos")
-
-    print(f"Tiempo de ejecución (memoizado): {measure_time(fibonacci_memoized, n)} segundos")
+    # inicio, fin = 0, 0
+    # inicio= time.time()
+    # with Pool() as pool:
+    #     resultados= pool.map(esPrimo, numeros)
+    # fin = time.time()
+    # print(f"Tiempo de ejecucion con multiprocessing:{fin - inicio} segundos")
+    # print(f"Resultados: {resultados}")
     
-    print(f"Tiempo de ejecución (iterativo): {measure_time(fibonacci_iterative, n)} segundos")
-
-
+    # #hilos
+    # inicio,fin = 0, 0
+    # inicio = time.time()
+    # hilos= []
+    # for i in range(len(numeros)):
+    #     hilo= threading.Thread(target=esPrimo, args=(numeros[i],))
+    #     hilos.append(hilo)
+    #     hilo.start()
+    # for hilo in hilos:
+    #     hilo.join()
+    # fin = time.time()
+    # print(f"Tiempo de ejecucion con hilos:        {fin - inicio} segundos")
 
 if __name__ == "__main__":
     main()
