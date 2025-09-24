@@ -1,10 +1,23 @@
-
 # Importa el módulo concurrent.futures para trabajar con hilos (threads)
 import concurrent.futures
 # Importa el módulo math para usar la función factorial
 import math
 # Importa el módulo time para medir el tiempo de ejecución
 import time
+
+# --- Perfilado (@profile) ---
+# Opción A (CPU, línea por línea): ejecutar con kernprof
+#   py -m kernprof -l -v .\factorial_threadpool_python.py
+#
+# Opción B (memoria): DESCOMENTAR la siguiente línea
+from memory_profiler import profile
+#
+# Si no hay ni kernprof ni memory_profiler, @profile queda como no-op.
+try:
+    profile  # si kernprof/memory_profiler ya lo definieron, lo usamos
+except NameError:
+    def profile(func):  # no-op
+        return func
 
 # Función que calcula el factorial de un número n
 def factorial(n):
@@ -16,10 +29,15 @@ if __name__ == "__main__":
     numbers = list(range(1, 101))
     # Guarda el tiempo de inicio
     start = time.time()
-    # Crea un ThreadPoolExecutor para ejecutar tareas en hilos concurrentes
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        # Ejecuta la función factorial en paralelo para cada número usando hilos
-        results = list(executor.map(factorial, numbers))
+
+    @profile
+    def _thread_pool():
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results = list(executor.map(factorial, numbers))
+        return results
+
+    results = _thread_pool()
+
     # Guarda el tiempo de finalización
     end = time.time()
     # Imprime los resultados de los factoriales

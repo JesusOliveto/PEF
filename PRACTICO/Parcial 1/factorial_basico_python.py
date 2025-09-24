@@ -2,6 +2,7 @@
 import time
 
 # Calcula el factorial de un número n de forma básica (sin usar math.factorial)
+
 def factorial_basico(n):
     resultado = 1
     for i in range(2, n + 1):
